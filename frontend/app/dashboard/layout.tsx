@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import NotificationsBell from "@/components/NotificationsBell";
 
 export default function DashboardLayout({
     children,
@@ -39,9 +40,12 @@ export default function DashboardLayout({
                             {verifiedStatus === 'PENDING' ? 'Em Análise' : verifiedStatus === 'VERIFIED' ? 'Verificado' : 'Rejeitado'}
                         </span>
                     </div>
-                    <Button variant="outline" size="sm" onClick={() => signOut()}>
-                        Sair
-                    </Button>
+                    <div className="flex gap-2 items-center">
+                        <NotificationsBell />
+                        <Button variant="outline" size="sm" onClick={() => signOut()}>
+                            Sair
+                        </Button>
+                    </div>
                 </nav>
             </header>
 
@@ -51,6 +55,9 @@ export default function DashboardLayout({
                     <nav className="space-y-2">
                         <Link href="/dashboard">
                             <Button variant="ghost" className="w-full justify-start">Início</Button>
+                        </Link>
+                        <Link href="/dashboard/profile">
+                            <Button variant="ghost" className="w-full justify-start">Meu Perfil</Button>
                         </Link>
 
                         {role !== "ADMIN" && (

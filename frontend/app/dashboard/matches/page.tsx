@@ -5,8 +5,10 @@ import { useSession } from "next-auth/react";
 import axios from "axios";
 import { toast } from "sonner";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
+import { useRouter } from "next/navigation";
 
 export default function MatchesPage() {
     const { data: session } = useSession();
@@ -45,10 +47,21 @@ export default function MatchesPage() {
         }
     };
 
+    const router = useRouter();
+
     const handleRouteSelect = (val: string) => {
         setSelectedRoute(val);
         fetchMatches(val);
     }
+
+    const handleStartChat = async (driverId: string, score: number) => {
+        try {
+            const res = await axios.post('/api/matches', { driverId, score });
+            router.push(`/dashboard/chat/${res.data.id}`);
+        } catch (error) {
+            toast.error("Erro ao iniciar chat");
+        }
+    };
 
     if ((session?.user as any)?.role !== 'PASSENGER') {
         return <div className="p-8 text-center text-orange-600 font-bold">Apenas contas do tipo PASSAGEIRA podem buscar ativamente Mãetoristas.</div>;
@@ -139,6 +152,13 @@ export default function MatchesPage() {
                                             <strong>{match.voltaDifferenceMins} mins</strong>
                                         </div>
                                     </div>
+
+                                    <Button
+                                        onClick={() => handleStartChat(match.driver.id, match.score_proximidade)}
+                                        className="w-full bg-green-600 hover:bg-green-700"
+                                    >
+                                        💬 Iniciar Conversa
+                                    </Button>
 
                                 </CardContent>
                             </Card>
