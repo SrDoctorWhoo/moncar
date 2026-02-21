@@ -1,0 +1,99 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum ProfileType {
+  PASSENGER
+  DRIVER
+  ADMIN
+}
+
+enum VerificationStatus {
+  PENDING
+  VERIFIED
+  REJECTED
+}
+
+enum DocumentStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+model User {
+  id                 String             @id @default(uuid())
+  nome               String
+  email              String             @unique
+  senha              String
+  tipo_perfil        ProfileType
+  status_verificacao VerificationStatus @default(PENDING)
+  createdAt          DateTime           @default(now())
+  updatedAt          DateTime           @updatedAt
+
+  documents          Document[]
+  routes             Route[]
+  matchesRequested   Match[]            @relation("RequesterMatches")
+  matchesAsDriver    Match[]            @relation("DriverMatches")
+  adminLogs          AdminLog[]         @relation("AdminLogs")
+}
+
+model Document {
+  id               String         @id @default(uuid())
+  user_id          String
+  tipo_documento   String
+  url              String
+  status           DocumentStatus @default(PENDING)
+  observacao_admin String?
+  createdAt        DateTime       @default(now())
+
+  user             User           @relation(fields: [user_id], references: [id])
+}
+
+model School {
+  id        String   @id @default(uuid())
+  nome      String
+  endereco  String
+  lat       Float
+  lng       Float
+  createdAt DateTime @default(now())
+}
+
+model Route {
+  id            String   @id @default(uuid())
+  user_id       String
+  origem_lat    Float
+  origem_lng    Float
+  destino_lat   Float
+  destino_lng   Float
+  polyline      String
+  horario_ida   String
+  horario_volta String
+  createdAt     DateTime @default(now())
+
+  user          User     @relation(fields: [user_id], references: [id])
+}
+
+model Match {
+  id                String   @id @default(uuid())
+  requester_id      String
+  driver_id         String
+  score_proximidade Float
+  createdAt         DateTime @default(now())
+
+  requester         User     @relation("RequesterMatches", fields: [requester_id], references: [id])
+  driver            User     @relation("DriverMatches", fields: [driver_id], references: [id])
+}
+
+model AdminLog {
+  id        String   @id @default(uuid())
+  admin_id  String
+  acao      String
+  data      DateTime @default(now())
+
+  admin     User     @relation("AdminLogs", fields: [admin_id], references: [id])
+}
