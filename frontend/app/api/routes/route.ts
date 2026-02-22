@@ -11,7 +11,7 @@ export async function POST(req: Request) {
             return NextResponse.json({ message: "Não autorizado" }, { status: 401 });
         }
 
-        const { origem_lat, origem_lng, destino_lat, destino_lng, horario_ida, horario_volta } = await req.json();
+        const { nome_rota, origem_lat, origem_lng, destino_lat, destino_lng, horario_ida, horario_volta } = await req.json();
 
         let polyline = "no_polyline";
         // If you have Mapbox Token, otherwise we generate a mock for MVP
@@ -28,9 +28,10 @@ export async function POST(req: Request) {
             }
         }
 
-        const newRoute = await prisma.route.create({
+        const newRoute = await (prisma.route as any).create({
             data: {
                 user_id: session.user.id,
+                nome_rota,
                 origem_lat,
                 origem_lng,
                 destino_lat,
@@ -38,7 +39,7 @@ export async function POST(req: Request) {
                 polyline,
                 horario_ida,
                 horario_volta
-            },
+            } as any,
         });
 
         return NextResponse.json(newRoute, { status: 201 });

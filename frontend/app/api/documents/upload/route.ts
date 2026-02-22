@@ -16,10 +16,14 @@ export async function POST(req: Request) {
         const formData = await req.formData();
         const file = formData.get("file") as File;
         const tipo_documento = formData.get("tipo_documento") as string;
+        const numero_documento = formData.get("numero_documento") as string | null;
+        const data_validade_raw = formData.get("data_validade") as string | null;
 
         if (!file || !tipo_documento) {
             return NextResponse.json({ message: "Arquivo e tipo são obrigatórios" }, { status: 400 });
         }
+
+        const data_validade = data_validade_raw ? new Date(data_validade_raw) : null;
 
         // Save File locally for MVP
         const bytes = await file.arrayBuffer();
@@ -41,6 +45,8 @@ export async function POST(req: Request) {
                 user_id: session.user.id,
                 tipo_documento,
                 url: dbPath,
+                numero_documento,
+                data_validade,
             },
             include: {
                 user: true
@@ -48,9 +54,10 @@ export async function POST(req: Request) {
         });
 
         // Automatically mark user as PENDING if they were REJECTED or just uploaded
-        if (doc.user.status_verificacao === 'REJECTED') {
+        const userStatus = (doc as any).user.status_verificacao;
+        if (userStatus === 'REJECTED') {
             await prisma.user.update({
-                where: { id: session.user.id },
+                where: { id: (session.user as any).id },
                 data: { status_verificacao: 'PENDING' }
             });
         }

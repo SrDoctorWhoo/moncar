@@ -53,6 +53,8 @@ model Document {
   tipo_documento   String
   url              String
   status           DocumentStatus @default(PENDING)
+  numero_documento String?
+  data_validade    DateTime?
   observacao_admin String?
   createdAt        DateTime       @default(now())
 
@@ -71,6 +73,7 @@ model School {
 model Route {
   id            String   @id @default(uuid())
   user_id       String
+  nome_rota     String?
   origem_lat    Float
   origem_lng    Float
   destino_lat   Float
@@ -89,6 +92,7 @@ model Match {
   driver_id         String
   score_proximidade Float
   createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
 
   requester         User     @relation("RequesterMatches", fields: [requester_id], references: [id])
   driver            User     @relation("DriverMatches", fields: [driver_id], references: [id])
@@ -125,4 +129,19 @@ model AdminLog {
   data      DateTime @default(now())
 
   admin     User     @relation("AdminLogs", fields: [admin_id], references: [id])
+}
+
+model DocumentConfig {
+  id             String      @id @default(uuid())
+  tipo_documento String
+  label          String
+  descricao      String?
+  icone          String      @default("📄")
+  perfil         ProfileType
+  ativo          Boolean     @default(true)
+  ordem          Int         @default(0)
+  createdAt      DateTime    @default(now())
+  updatedAt      DateTime    @updatedAt
+
+  @@unique([tipo_documento, perfil])
 }

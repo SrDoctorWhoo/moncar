@@ -57,7 +57,11 @@ export default function MapRouter({ onRouteUpdate }: MapRouterProps) {
             draggableWaypoints: true,
             routeWhileDragging: true,
             router: (L.Routing as any).osrmv1({ serviceUrl: "https://router.project-osrm.org/route/v1" }),
-            show: true
+            show: false,
+            fitSelectedRoutes: false,
+            lineOptions: {
+                styles: [{ color: '#4f46e5', weight: 5, opacity: 0.8 }]
+            }
         }).addTo(map);
 
         routingControl.current = routing;

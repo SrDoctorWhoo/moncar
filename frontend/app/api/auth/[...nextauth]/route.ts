@@ -40,12 +40,35 @@ export const authOptions: NextAuthOptions = {
         })
     ],
     callbacks: {
-        async jwt({ token, user }) {
+        async jwt({ token, user, trigger }) {
+            // On initial sign-in: populate token fields from the user object
             if (user) {
                 token.id = user.id;
                 token.role = (user as any).role;
                 token.verifiedStatus = (user as any).verifiedStatus;
+                token.iat = Math.floor(Date.now() / 1000);
             }
+
+            // Re-fetch verifiedStatus from DB on update trigger OR every 60 seconds
+            // This ensures the token always reflects the current DB state
+            const tokenAge = Math.floor(Date.now() / 1000) - ((token.iat as number) ?? 0);
+            if (trigger === "update" || tokenAge > 60) {
+                if (token.id) {
+                    try {
+                        const freshUser = await prisma.user.findUnique({
+                            where: { id: token.id as string },
+                            select: { status_verificacao: true }
+                        });
+                        if (freshUser) {
+                            token.verifiedStatus = freshUser.status_verificacao;
+                        }
+                    } catch {
+                        // silently ignore DB read errors — use cached value
+                    }
+                }
+                token.iat = Math.floor(Date.now() / 1000);
+            }
+
             return token;
         },
         async session({ session, token }) {

@@ -65,6 +65,12 @@ export async function POST(
             include: { sender: { select: { nome: true, imagem_url: true } } }
         });
 
+        // Update match updatedAt to bring it to the top of the list
+        await (prisma as any).match.update({
+            where: { id: matchId },
+            data: { updatedAt: new Date() }
+        });
+
         // Trigger notification for the other user (TODO: implement notification service)
         const recipientId = match.requester_id === (session.user as any).id ? match.driver_id : match.requester_id;
         await prisma.notification.create({
