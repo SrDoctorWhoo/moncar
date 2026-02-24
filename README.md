@@ -10,7 +10,7 @@ Esta versão adota uma arquitetura **Full-Stack Next.js (App Router)** unificada
 
 ## 🚀 Como Rodar o Projeto
 
-Toda a aplicação agora roda em um único repositório (`frontend`). Banco de dados e Front-end convivem no mesmo ecossistema via Next.js e Prisma.
+Toda a aplicação agora roda em um único repositório (`frontend`). Banco de dados e Front-end convivem no mesmo ecossistema via Next.js e Prisma. Você pode rodar os comandos a partir da pasta raiz do projeto, pois ela redireciona os comandos para a pasta `frontend`.
 
 ### 1. Iniciar o Banco de Dados
 Na raiz do projeto (`frontend`):
@@ -20,10 +20,11 @@ docker-compose up -d
 > Isso iniciará um container PostgreSQL na porta `5432`.
 
 ### 2. Instalar Dependências
-Ainda na pasta `frontend`:
+Na raiz do projeto executando:
 ```bash
 npm install
 ```
+*(Se preferir, as dependências estão fisicamente na pasta `frontend`)*
 
 ### 3. Configurar Variáveis de Ambiente
 O projeto já conta com um arquivo `.env` para rodar localmente. Ele contém a connection string do DB e as URLs do NextAuth.
@@ -38,10 +39,11 @@ npm run prisma:seed
 ```
 
 ### 5. Iniciar Servidor de Desenvolvimento
+A partir da raiz do projeto:
 ```bash
-npm run dev -- -p 3001
+npm run dev
 ```
-Acesse a aplicação no navegador em: **`http://localhost:3001`**
+Acesse a aplicação no navegador em: **`http://localhost:3000`**
 
 ---
 

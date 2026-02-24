@@ -4,6 +4,17 @@ import * as bcrypt from 'bcrypt';
 const prisma = new PrismaClient();
 
 async function main() {
+    console.log('Cleaning database...');
+    await prisma.adminLog.deleteMany({});
+    await prisma.notification.deleteMany({});
+    await prisma.chatMessage.deleteMany({});
+    await prisma.match.deleteMany({});
+    await prisma.document.deleteMany({});
+    await prisma.route.deleteMany({});
+    await prisma.user.deleteMany({});
+    await (prisma as any).documentConfig.deleteMany({});
+    await prisma.school.deleteMany({});
+
     console.log('Seeding database...');
 
     const salt = await bcrypt.genSalt();

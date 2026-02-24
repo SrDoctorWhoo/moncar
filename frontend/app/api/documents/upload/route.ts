@@ -23,7 +23,8 @@ export async function POST(req: Request) {
             return NextResponse.json({ message: "Arquivo e tipo são obrigatórios" }, { status: 400 });
         }
 
-        const data_validade = data_validade_raw ? new Date(data_validade_raw) : null;
+        const cleanNumero = numero_documento && numero_documento !== "null" ? numero_documento : undefined;
+        const data_validade = data_validade_raw && data_validade_raw !== "null" ? new Date(data_validade_raw) : undefined;
 
         // Save File locally for MVP
         const bytes = await file.arrayBuffer();
@@ -45,8 +46,8 @@ export async function POST(req: Request) {
                 user_id: session.user.id,
                 tipo_documento,
                 url: dbPath,
-                numero_documento,
-                data_validade,
+                numero_documento: cleanNumero,
+                data_validade: data_validade,
             },
             include: {
                 user: true

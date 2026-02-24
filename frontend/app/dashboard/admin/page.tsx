@@ -119,13 +119,24 @@ export default function AdminDashboardPage() {
 
         setActionLoading(docId + status);
         try {
-            await axios.patch(`/api/admin/documents/${docId}`, {
+            const response = await axios.patch(`/api/admin/documents/${docId}`, {
                 status,
                 observacao_admin: obs,
             });
+
             toast.success(status === "APPROVED" ? "✅ Documento aprovado!" : "❌ Documento rejeitado.");
             setPendingDocs((prev) => prev.filter((d) => d.id !== docId));
-            fetchData();
+
+            // If the API returned the new overall userStatus, update the local user list
+            if (response.data?.userStatus) {
+                setUsers((prevUsers) => prevUsers.map(u =>
+                    u.id === response.data.user_id
+                        ? { ...u, status_verificacao: response.data.userStatus }
+                        : u
+                ));
+            } else {
+                fetchData(); // Fallback if API response didn't contain userStatus
+            }
         } catch {
             toast.error("Erro ao processar documento.");
         } finally {

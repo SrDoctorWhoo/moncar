@@ -1,14 +1,20 @@
 import type { Metadata, Viewport } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Overpass, Cabin, Gloria_Hallelujah } from "next/font/google";
 import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const overpass = Overpass({
+  variable: "--font-overpass",
   subsets: ["latin"],
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const cabin = Cabin({
+  variable: "--font-cabin",
+  subsets: ["latin"],
+});
+
+const gloria = Gloria_Hallelujah({
+  variable: "--font-gloria",
+  weight: "400",
   subsets: ["latin"],
 });
 
@@ -33,7 +39,7 @@ export default function RootLayout({
   return (
     <html lang="pt-BR">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${overpass.variable} ${cabin.variable} ${gloria.variable} font-sans antialiased`}
       >
         <Providers>
           {children}

@@ -19,12 +19,12 @@ export async function PATCH(
 
         const adminId = (session.user as any).id as string | undefined;
 
-        const { status, observacao_admin } = await req.json();
+        const { status: newDocStatus, observacao_admin } = await req.json();
 
-        if (!['APPROVED', 'REJECTED'].includes(status)) {
+        if (!['APPROVED', 'REJECTED'].includes(newDocStatus)) {
             return NextResponse.json({ message: "Status inválido" }, { status: 400 });
         }
-        if (status === 'REJECTED' && !observacao_admin) {
+        if (newDocStatus === 'REJECTED' && !observacao_admin) {
             return NextResponse.json({ message: "Observação é obrigatória para rejeição" }, { status: 400 });
         }
 
@@ -32,7 +32,7 @@ export async function PATCH(
         const doc = await prisma.document.update({
             where: { id: docId },
             data: {
-                status: status as DocumentStatus,
+                status: newDocStatus as DocumentStatus,
                 observacao_admin: observacao_admin ?? null,
             }
         });
@@ -64,9 +64,12 @@ export async function PATCH(
             for (const config of requiredConfigs) {
                 const userDoc = userDocs.find(ud => ud.tipo_documento === config.tipo_documento);
 
-                if (!userDoc || userDoc.status === 'PENDING') {
+                // Check against the updated status for the current document being processed
+                const effectiveDocStatus = userDoc?.id === docId ? newDocStatus : userDoc?.status;
+
+                if (!effectiveDocStatus || effectiveDocStatus === 'PENDING') {
                     newStatus = VerificationStatus.PENDING;
-                } else if (userDoc.status === 'REJECTED') {
+                } else if (effectiveDocStatus === 'REJECTED') {
                     newStatus = VerificationStatus.REJECTED;
                     break;
                 }
@@ -83,10 +86,11 @@ export async function PATCH(
         // 6. Log admin action
         if (adminId) {
             try {
+                // @ts-ignore
                 await prisma.adminLog.create({
                     data: {
                         admin_id: adminId,
-                        acao: `Documento ${docId} do usuário ${doc.user_id} alterado para ${status}. Status geral: ${newStatus}`,
+                        acao: `Documento ${docId} do usuário ${doc.user_id} alterado para ${newDocStatus}. Status geral: ${newStatus}`,
                     }
                 });
             } catch (logError) {

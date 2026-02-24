@@ -70,7 +70,7 @@ const STATUS_CONFIG = {
 };
 
 export default function DocumentsPage() {
-  const { data: session } = useSession();
+  const { data: session, update } = useSession();
   const [documents, setDocuments] = useState<Document[]>([]);
   const [configs, setConfigs] = useState<DocumentConfig[]>([]);
   const [file, setFile] = useState<File | null>(null);
@@ -83,11 +83,12 @@ export default function DocumentsPage() {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    if (session) {
+    if (session?.user) {
       fetchConfigs();
       fetchDocuments();
     }
-  }, [session]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [session?.user?.id]);
 
   const fetchConfigs = async () => {
     try {
@@ -131,7 +132,10 @@ export default function DocumentsPage() {
       setNumeroDocumento("");
       setDataValidade("");
       if (fileInputRef.current) fileInputRef.current.value = "";
-      fetchDocuments();
+
+      // Update session only after a successful upload to reflect possible status changes
+      await update();
+      await fetchDocuments();
     } catch {
       toast.error("Erro ao enviar o documento. Tente novamente.");
     } finally {
@@ -362,6 +366,7 @@ export default function DocumentsPage() {
             {documents.map((doc) => {
               const status = STATUS_CONFIG[doc.status] || STATUS_CONFIG.PENDING;
               const typeInfo = configs.find(c => c.tipo_documento === doc.tipo_documento) || DOC_TYPE_LABELS[doc.tipo_documento];
+
               return (
                 <div
                   key={doc.id}
