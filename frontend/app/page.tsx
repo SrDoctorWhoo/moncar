@@ -1,16 +1,18 @@
 import Link from "next/link";
+import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { MomcarLogo } from "@/components/ui/Logo";
+import { FaCarSide, FaShieldHeart, FaMapLocationDot, FaUserCheck, FaMapPin, FaRegHandshake } from "react-icons/fa6";
 
 export default function Home() {
   return (
     <div className="min-h-screen bg-background text-foreground flex flex-col font-sans selection:bg-primary selection:text-white">
       <header className="px-6 lg:px-12 h-20 flex items-center bg-white/80 backdrop-blur-md sticky top-0 z-50 border-b border-foreground/5 shadow-sm">
         <div className="flex flex-1 justify-between items-center max-w-7xl mx-auto w-full">
-          <h1 className="flex items-center">
+          <Link href="/" className="flex items-center">
             <span className="sr-only">Momcar</span>
-            <MomcarLogo className="h-16 w-32 sm:h-20 sm:w-40" />
-          </h1>
+            <Image src="/LogoHome.png" alt="Momcar Logo" width={140} height={50} className="h-12 w-auto object-contain drop-shadow-sm hover:opacity-90 transition-opacity" priority />
+          </Link>
           <nav className="flex items-center gap-6">
             <Link className="text-sm font-semibold text-secondary hover:text-primary transition-colors" href="#como-funciona">
               A Missão
@@ -59,44 +61,46 @@ export default function Home() {
             </div>
 
             {/* Right Side: Visual Representation */}
-            <div className="relative mx-auto w-full max-w-lg lg:max-w-none">
-              <div className="aspect-square rounded-[2.5rem] bg-gradient-to-tr from-secondary via-accent to-primary p-1 shadow-2xl relative overflow-hidden group">
-                <div className="absolute inset-0 bg-white/20 backdrop-blur-3xl group-hover:bg-transparent transition-all duration-700"></div>
-                <div className="w-full h-full rounded-[2.25rem] bg-white p-8 flex flex-col justify-between relative z-10 shadow-inner">
-                  <div className="flex items-center justify-between">
-                    <div className="space-y-1">
-                      <div className="h-2 w-12 bg-primary rounded-full"></div>
-                      <div className="h-2 w-24 bg-muted rounded-full"></div>
-                    </div>
-                    <div className="w-12 h-12 rounded-full bg-secondary/10 flex items-center justify-center">
-                      <div className="w-6 h-6 rounded-full bg-secondary"></div>
-                    </div>
-                  </div>
+            <div className="relative mx-auto w-full max-w-lg lg:max-w-none lg:pr-10">
+              {/* Dynamic Connected Network Illustration */}
+              <div className="aspect-square relative w-full h-[450px] sm:h-[550px]">
 
-                  <div className="space-y-4">
-                    <div className="h-16 w-full rounded-2xl bg-background border border-foreground/5 flex items-center px-4 gap-4">
-                      <div className="w-10 h-10 rounded-full bg-primary flex items-center justify-center text-white font-bold text-sm">M1</div>
-                      <div className="space-y-1.5 flex-1">
-                        <div className="h-2 w-1/2 bg-foreground/20 rounded-full"></div>
-                        <div className="h-2 w-1/3 bg-primary/20 rounded-full"></div>
-                      </div>
-                    </div>
-                    <div className="h-16 w-full rounded-2xl bg-secondary/5 border border-secondary/10 flex items-center px-4 gap-4">
-                      <div className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center text-white font-bold text-sm">M2</div>
-                      <div className="space-y-1.5 flex-1">
-                        <div className="h-2 w-3/4 bg-secondary/40 rounded-full"></div>
-                        <div className="h-2 w-1/2 bg-secondary/20 rounded-full"></div>
-                      </div>
-                    </div>
-                    <div className="h-16 w-full rounded-2xl bg-accent/5 border border-accent/10 flex items-center px-4 gap-4">
-                      <div className="w-10 h-10 rounded-full bg-accent flex items-center justify-center text-white font-bold text-sm">M3</div>
-                      <div className="space-y-1.5 flex-1">
-                        <div className="h-2 w-2/3 bg-accent/40 rounded-full"></div>
-                        <div className="h-2 w-1/4 bg-accent/20 rounded-full"></div>
-                      </div>
-                    </div>
-                  </div>
+                {/* Central Glowing Shield */}
+                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-40 h-40 bg-white rounded-full shadow-2xl flex items-center justify-center z-20 border-8 border-primary/10 animate-[pulse_4s_ease-in-out_infinite]">
+                  <FaShieldHeart className="w-20 h-20 text-primary drop-shadow-md" />
                 </div>
+
+                {/* Pulse Rings */}
+                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 border-2 border-primary/20 rounded-full animate-[ping_3s_cubic-bezier(0,0,0.2,1)_infinite] z-0"></div>
+                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 border border-secondary/20 rounded-full z-0"></div>
+
+                {/* Floating Element 1: Car on Route (Mãe) */}
+                <div className="absolute top-[10%] left-[15%] w-24 h-24 bg-white/80 backdrop-blur-xl rounded-[2rem] border border-white/60 shadow-[0_20px_40px_-15px_rgba(53,92,125,0.3)] flex flex-col items-center justify-center z-30 transform -rotate-3 animate-[bounce_6s_infinite] transition-transform hover:scale-110">
+                  <FaCarSide className="w-8 h-8 text-secondary drop-shadow-sm mb-1" />
+                  <span className="text-[10px] font-bold text-secondary uppercase tracking-wider">Mãe</span>
+                </div>
+
+                {/* Floating Element 2: Map Pin (Escola) */}
+                <div className="absolute bottom-[10%] left-[5%] w-24 h-24 bg-white/80 backdrop-blur-xl rounded-[2rem] border border-white/60 shadow-[0_20px_40px_-15px_rgba(108,91,123,0.3)] flex flex-col items-center justify-center z-30 transform rotate-6 animate-[bounce_7s_infinite_0.5s] transition-transform hover:scale-110">
+                  <FaMapLocationDot className="w-8 h-8 text-accent drop-shadow-sm mb-1" />
+                  <span className="text-[10px] font-bold text-accent uppercase tracking-wider">Escola</span>
+                </div>
+
+                {/* Floating Element 3: Verification Check (100% Seguro) */}
+                <div className="absolute top-[30%] right-[0%] w-24 h-24 bg-white/80 backdrop-blur-xl rounded-[2rem] border border-white/60 shadow-[0_20px_40px_-15px_rgba(16,185,129,0.3)] flex flex-col items-center justify-center z-30 transform rotate-3 animate-[bounce_5s_infinite_1s] transition-transform hover:scale-110">
+                  <div className="w-10 h-10 rounded-full bg-emerald-50 flex items-center justify-center mb-1">
+                    <FaUserCheck className="w-5 h-5 text-emerald-500" />
+                  </div>
+                  <span className="text-[10px] font-bold text-emerald-600 uppercase tracking-wider">Verificado</span>
+                </div>
+
+                {/* Dotted Connections lines (SVG overlay) */}
+                <svg className="absolute inset-0 w-full h-full z-10 pointer-events-none opacity-40">
+                  <path d="M 120 100 Q 250 150 250 250" fill="transparent" stroke="currentColor" className="text-secondary" strokeWidth="4" strokeDasharray="8 8" />
+                  <path d="M 100 400 Q 200 350 250 250" fill="transparent" stroke="currentColor" className="text-accent" strokeWidth="4" strokeDasharray="8 8" />
+                  <path d="M 400 180 Q 350 200 250 250" fill="transparent" stroke="currentColor" className="text-emerald-500" strokeWidth="4" strokeDasharray="8 8" />
+                </svg>
+
               </div>
             </div>
           </div>
@@ -119,7 +123,9 @@ export default function Home() {
               {/* Step 1 */}
               <div className="bg-background rounded-3xl p-8 border border-foreground/5 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 relative overflow-hidden group">
                 <div className="absolute top-0 right-0 w-32 h-32 bg-primary/10 rounded-bl-full -mr-8 -mt-8 transition-transform group-hover:scale-150"></div>
-                <div className="w-14 h-14 rounded-2xl bg-primary text-white flex items-center justify-center text-2xl font-bold mb-6 relative z-10 shadow-lg shadow-primary/30">1</div>
+                <div className="w-14 h-14 rounded-2xl bg-primary text-white flex items-center justify-center text-2xl font-bold mb-6 relative z-10 shadow-lg shadow-primary/30">
+                  <FaUserCheck />
+                </div>
                 <h4 className="text-xl font-bold text-secondary mb-3 relative z-10">Verificação Segura</h4>
                 <p className="text-muted-foreground relative z-10">
                   Envie seus documentos obrigatórios. Cada perfil é auditado por nossa equipe para garantir uma rede de confiança restrita para mães.
@@ -129,7 +135,9 @@ export default function Home() {
               {/* Step 2 */}
               <div className="bg-background rounded-3xl p-8 border border-foreground/5 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 relative overflow-hidden group">
                 <div className="absolute top-0 right-0 w-32 h-32 bg-secondary/10 rounded-bl-full -mr-8 -mt-8 transition-transform group-hover:scale-150"></div>
-                <div className="w-14 h-14 rounded-2xl bg-secondary text-white flex items-center justify-center text-2xl font-bold mb-6 relative z-10 shadow-lg shadow-secondary/30">2</div>
+                <div className="w-14 h-14 rounded-2xl bg-secondary text-white flex items-center justify-center text-2xl font-bold mb-6 relative z-10 shadow-lg shadow-secondary/30">
+                  <FaMapPin />
+                </div>
                 <h4 className="text-xl font-bold text-secondary mb-3 relative z-10">Mapeamento</h4>
                 <p className="text-muted-foreground relative z-10">
                   Cadastre o trajeto exato da sua residência até o colégio, cruzando os horários de entrada e saída da rotina escolar da criança.
@@ -139,7 +147,9 @@ export default function Home() {
               {/* Step 3 */}
               <div className="bg-background rounded-3xl p-8 border border-foreground/5 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 relative overflow-hidden group">
                 <div className="absolute top-0 right-0 w-32 h-32 bg-accent/10 rounded-bl-full -mr-8 -mt-8 transition-transform group-hover:scale-150"></div>
-                <div className="w-14 h-14 rounded-2xl bg-accent text-white flex items-center justify-center text-2xl font-bold mb-6 relative z-10 shadow-lg shadow-accent/30">3</div>
+                <div className="w-14 h-14 rounded-2xl bg-accent text-white flex items-center justify-center text-2xl font-bold mb-6 relative z-10 shadow-lg shadow-accent/30">
+                  <FaRegHandshake />
+                </div>
                 <h4 className="text-xl font-bold text-secondary mb-3 relative z-10">Conexão</h4>
                 <p className="text-muted-foreground relative z-10">
                   Nosso algoritmo realiza o cruzamento geográfico inteligente, unindo Mãetoristas e Passageiras num raio seguro.
@@ -151,10 +161,10 @@ export default function Home() {
       </main>
 
       <footer className="py-8 px-6 lg:px-12 border-t border-foreground/5 bg-white text-center">
-        <h2 className="flex items-center justify-center">
+        <Link href="/" className="flex justify-center">
           <span className="sr-only">Momcar</span>
-          <MomcarLogo className="h-12 w-24" />
-        </h2>
+          <Image src="/LogoHome.png" alt="Momcar Logo" width={120} height={50} className="object-contain opacity-50 grayscale hover:grayscale-0 hover:opacity-100 transition-all" />
+        </Link>
         <p className="text-sm font-medium text-muted-foreground mt-2">
           © 2026 Operação MVP. Rede de apoio colaborativa.
         </p>

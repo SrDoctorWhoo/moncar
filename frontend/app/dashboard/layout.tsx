@@ -5,20 +5,22 @@ import { useSession, signOut } from "next-auth/react";
 import { usePathname, useRouter } from "next/navigation";
 import Link from "next/link";
 import {
-    Home,
-    User,
-    FileText,
-    MapPin,
-    Users,
-    ShieldCheck,
-    LogOut,
     Menu,
     X,
-    Activity,
     ChevronDown,
-    MessageSquare,
-    SquareChartGantt
 } from "lucide-react";
+
+import {
+    FaHouse,
+    FaFileSignature,
+    FaMapLocationDot,
+    FaUsersViewfinder,
+    FaComments,
+    FaShieldHalved,
+    FaArrowRightFromBracket,
+    FaCircleNotch,
+    FaRegUser
+} from "react-icons/fa6";
 
 import {
     DropdownMenu,
@@ -56,7 +58,7 @@ export default function DashboardLayout({
         return (
             <div className="min-h-screen flex items-center justify-center bg-background text-secondary">
                 <div className="flex flex-col items-center gap-4">
-                    <Activity className="w-12 h-12 animate-pulse text-primary" />
+                    <FaCircleNotch className="w-12 h-12 animate-spin text-primary" />
                     <p className="font-semibold text-sm">Sincronizando Sistema...</p>
                 </div>
             </div>
@@ -67,35 +69,35 @@ export default function DashboardLayout({
     const isVerified = verifiedStatus === "VERIFIED";
 
     const navItems = [
-        { href: "/dashboard", label: "Painel Central", icon: Home, show: true },
+        { href: "/dashboard", label: "Painel Central", icon: FaHouse, show: true },
         {
             href: "/dashboard/documents",
             label: "Dossier Documental",
-            icon: FileText,
+            icon: FaFileSignature,
             show: role !== "ADMIN"
         },
         {
             href: "/dashboard/routes",
             label: "Malha Viária",
-            icon: MapPin,
+            icon: FaMapLocationDot,
             show: role !== "ADMIN" && isVerified
         },
         {
             href: "/dashboard/matches",
             label: "Mãetoristas Próximas",
-            icon: Users,
+            icon: FaUsersViewfinder,
             show: role === "PASSENGER" && isVerified
         },
         {
             href: "/dashboard/chat",
             label: "Comunicações",
-            icon: MessageSquare,
+            icon: FaComments,
             show: role !== "ADMIN" && isVerified
         },
         {
             href: "/dashboard/admin",
             label: "Comando Geral",
-            icon: ShieldCheck,
+            icon: FaShieldHalved,
             show: role === "ADMIN",
             special: true
         },
@@ -109,10 +111,10 @@ export default function DashboardLayout({
             <div className="absolute top-0 right-0 w-64 h-64 bg-primary/20 rounded-full blur-[80px] -translate-y-1/2 translate-x-1/4 pointer-events-none"></div>
 
             {/* Logo Section */}
-            <div className="flex items-center h-20 px-8 border-b border-white/10 relative z-10">
+            <div className="flex items-center justify-center sm:justify-start h-20 px-8 border-b border-white/10 relative z-10 w-full">
                 <Link href="/dashboard" className="flex items-center group py-2">
                     <span className="sr-only">Momcar</span>
-                    <MomcarLogo className="h-16 w-32 drop-shadow-sm" />
+                    <MomcarLogo className="h-12 sm:h-16 w-auto drop-shadow-sm" />
                 </Link>
             </div>
 
@@ -147,9 +149,9 @@ export default function DashboardLayout({
             <div className="p-6 border-t border-white/10 bg-secondary-foreground/5 relative z-10">
                 <button
                     onClick={() => signOut()}
-                    className="flex w-full items-center justify-start rounded-xl px-4 py-3 text-sm font-medium text-white/70 hover:bg-white/10 hover:text-white transition-colors"
+                    className="flex w-full items-center justify-start rounded-xl px-4 py-3 text-sm font-medium text-white/70 hover:bg-white/10 hover:text-white transition-colors gap-3"
                 >
-                    <LogOut className="w-4 h-4 mr-3" /> Encerrar Sessão
+                    <FaArrowRightFromBracket className="w-4 h-4" /> Encerrar Sessão
                 </button>
             </div>
         </div>
@@ -184,10 +186,10 @@ export default function DashboardLayout({
             {/* Main Content Area */}
             <div className="flex-1 flex flex-col min-w-0 overflow-hidden relative">
                 {/* Top Header */}
-                <header className="h-20 px-6 lg:px-10 flex items-center justify-between border-b border-foreground/5 bg-white/80 backdrop-blur-md sticky top-0 z-10 transition-all shadow-sm">
-                    <div className="flex items-center gap-4">
+                <header className="h-20 px-4 sm:px-6 lg:px-10 flex items-center justify-between border-b border-foreground/5 bg-white/80 backdrop-blur-md sticky top-0 z-40 transition-all shadow-sm">
+                    <div className="flex items-center gap-2 sm:gap-4">
                         <button
-                            className="md:hidden p-2 text-secondary bg-secondary/5 hover:bg-secondary/10 rounded-xl transition-colors"
+                            className="md:hidden p-2 text-secondary bg-secondary/5 hover:bg-secondary/10 rounded-xl transition-colors shrink-0"
                             onClick={() => setIsMobileOpen(true)}
                         >
                             <Menu className="w-5 h-5" />
@@ -236,7 +238,7 @@ export default function DashboardLayout({
                                             verifiedStatus === 'REJECTED' ? 'bg-destructive/10 text-destructive' :
                                                 'bg-orange-50 text-orange-700'}`}
                                     >
-                                        <ShieldCheck className="w-4 h-4" />
+                                        <FaShieldHalved className="w-4 h-4" />
                                         <span>{verifiedStatus === 'PENDING' ? 'Auditoria Pendente' : verifiedStatus === 'VERIFIED' ? 'Conta Autenticada' : 'Doc. Rejeitada'}</span>
                                     </div>
                                 </div>
@@ -245,12 +247,12 @@ export default function DashboardLayout({
 
                                 <div className="p-1">
                                     <DropdownMenuItem onClick={() => router.push('/dashboard/profile')} className="cursor-pointer gap-3 py-2.5 rounded-xl hover:bg-secondary/5 focus:bg-secondary/5 transition-colors font-medium text-sm text-secondary">
-                                        <User className="h-4 w-4" />
+                                        <FaRegUser className="h-4 w-4" />
                                         <span>Meu Perfil</span>
                                     </DropdownMenuItem>
 
                                     <DropdownMenuItem onClick={() => signOut()} className="cursor-pointer gap-3 py-2.5 mt-1 rounded-xl focus:bg-destructive/10 hover:bg-destructive/10 transition-colors font-medium text-sm text-destructive">
-                                        <LogOut className="h-4 w-4" />
+                                        <FaArrowRightFromBracket className="h-4 w-4" />
                                         <span>Sair da Conta</span>
                                     </DropdownMenuItem>
                                 </div>
@@ -260,7 +262,7 @@ export default function DashboardLayout({
                 </header>
 
                 <main className="flex-1 overflow-y-auto w-full custom-scrollbar">
-                    <div className="p-6 md:p-8 lg:p-12 max-w-7xl mx-auto min-h-full">
+                    <div className="p-4 sm:p-6 md:p-8 lg:p-12 max-w-7xl mx-auto min-h-full">
                         {children}
                     </div>
                 </main>

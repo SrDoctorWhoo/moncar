@@ -1,7 +1,7 @@
 import type { NextConfig } from "next";
 const withPWA = require("next-pwa")({
   dest: "public",
-  disable: process.env.NODE_ENV === "development",
+  disable: false, // temporarily enabled in dev so the user can see the install button
   register: true,
   skipWaiting: true,
 });

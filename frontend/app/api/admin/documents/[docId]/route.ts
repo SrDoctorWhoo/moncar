@@ -53,9 +53,21 @@ export async function PATCH(
         }
 
         // 4. Fetch required document types for this profile
-        const requiredConfigs = await (prisma as any).documentConfig.findMany({
+        let requiredConfigs = await (prisma as any).documentConfig.findMany({
             where: { perfil: user.tipo_perfil, ativo: true }
         });
+
+        // Fallback to defaults if DB is empty (same as frontend API)
+        if (requiredConfigs.length === 0) {
+            requiredConfigs = [
+                { tipo_documento: "RG_CNH", perfil: user.tipo_perfil },
+                { tipo_documento: "CRIANCA", perfil: user.tipo_perfil }
+            ];
+
+            if (user.tipo_perfil === "DRIVER") {
+                requiredConfigs.push({ tipo_documento: "CNH_MOTORISTA", perfil: user.tipo_perfil });
+            }
+        }
 
         // 5. Determine overall status
         let newStatus: VerificationStatus = VerificationStatus.VERIFIED;
@@ -74,8 +86,6 @@ export async function PATCH(
                     break;
                 }
             }
-        } else {
-            newStatus = VerificationStatus.PENDING;
         }
 
         const updatedUser = await prisma.user.update({
